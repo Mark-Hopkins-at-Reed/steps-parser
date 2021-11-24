@@ -9,7 +9,7 @@
 from collections import defaultdict
 from itertools import chain
 
-from data_handling.label_index_matrix import LabelIndexMatrix
+from steps.data_handling.label_index_matrix import LabelIndexMatrix
 
 
 class DependencyMatrix:

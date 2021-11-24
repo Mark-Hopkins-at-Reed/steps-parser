@@ -22,7 +22,7 @@ from transformers.modeling_xlm_roberta import XLMRobertaModel, XLMRobertaConfig
 
 from torch.nn import Dropout
 
-from models.embeddings.scalar_mix import ScalarMixWithDropout
+from steps.models.embeddings.scalar_mix import ScalarMixWithDropout
 
 
 class Wrapper(nn.Module):

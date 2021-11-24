@@ -7,14 +7,14 @@
 import transformers
 import json
 
-import data_handling.vocab as vocab_module
-import data_handling.data_loaders as data_loaders_module
+import steps.data_handling.vocab as vocab_module
+import steps.data_handling.data_loaders as data_loaders_module
 import torch.optim as optimizers_module
-import trainer.losses as loss_module
-import models.embeddings as embeddings_module
-import models.outputs as outputs_module
-import trainer.lr_scheduler as lr_scheduler_module
-import models.post_processing as post_processing_module
+import steps.trainer.losses as loss_module
+import steps.models.embeddings as embeddings_module
+import steps.models.outputs as outputs_module
+import steps.trainer.lr_scheduler as lr_scheduler_module
+import steps.models.post_processing as post_processing_module
 
 from pathlib import Path
 from functools import reduce
@@ -23,12 +23,12 @@ from datetime import datetime
 from collections import OrderedDict
 from torch.nn import ModuleDict
 
-from logger import Logger
-from trainer.trainer import Trainer
-from models.multi_parser import MultiParser
-from trainer.eval_criterion import EvaluationCriterion
-from trainer.loss_scaler import LossScaler
-from trainer.lr_scheduler import SqrtSchedule, WarmRestartSchedule
+from steps.logger import Logger
+from steps.trainer.trainer import Trainer
+from steps.models.multi_parser import MultiParser
+from steps.trainer.eval_criterion import EvaluationCriterion
+from steps.trainer.loss_scaler import LossScaler
+from steps.trainer.lr_scheduler import SqrtSchedule, WarmRestartSchedule
 
 
 class ConfigParser:

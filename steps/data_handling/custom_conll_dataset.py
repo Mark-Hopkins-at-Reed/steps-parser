@@ -10,10 +10,10 @@ from torch.utils.data import Dataset
 
 from math import inf
 
-from data_handling.dependency_matrix import DependencyMatrix
-from data_handling.tag_sequence import TagSequence
-from data_handling.vocab import BasicVocab
-from data_handling.annotated_sentence import AnnotatedSentence
+from steps.data_handling.dependency_matrix import DependencyMatrix
+from steps.data_handling.tag_sequence import TagSequence
+from steps.data_handling.vocab import BasicVocab
+from steps.data_handling.annotated_sentence import AnnotatedSentence
 
 
 class CustomCoNLLDataset(Dataset):

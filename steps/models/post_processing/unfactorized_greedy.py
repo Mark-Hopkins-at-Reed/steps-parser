@@ -11,8 +11,8 @@ import torch
 from abc import abstractmethod
 from torch.nn.functional import softmax
 
-from models.post_processing.post_processor import PostProcessor
-from data_handling.dependency_matrix import dependents
+from steps.models.post_processing.post_processor import PostProcessor
+from steps.data_handling.dependency_matrix import dependents
 
 
 class UnfactorizedGreedyPostProcessor(PostProcessor):

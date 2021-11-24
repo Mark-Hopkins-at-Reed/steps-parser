@@ -11,10 +11,10 @@ import re
 
 from copy import deepcopy
 
-from data_handling.dependency_matrix import heads, dependents
-from models.post_processing.post_processor import PostProcessor
+from steps.data_handling.dependency_matrix import heads, dependents
+from steps.models.post_processing.post_processor import PostProcessor
 
-from util.lexicalize import lexicalize
+from steps.util.lexicalize import lexicalize
 
 
 class FactorizedGreedyGraphPostProcessor(PostProcessor):

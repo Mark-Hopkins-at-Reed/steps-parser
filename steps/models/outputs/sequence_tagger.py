@@ -11,7 +11,7 @@ import torch.nn.functional as F
 
 from torch import nn
 
-from models.outputs.mlp import MLP
+from steps.models.outputs.mlp import MLP
 
 
 class SequenceTagger(nn.Module):

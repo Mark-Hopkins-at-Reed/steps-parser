@@ -10,7 +10,7 @@ import torch
 from numpy import inf
 from torch.nn.utils import clip_grad_norm_
 
-from models.multi_parser import update_eval_counts
+from steps.models.multi_parser import update_eval_counts
 
 
 class Trainer:

@@ -11,7 +11,7 @@ import torch.nn.functional as F
 
 from torch import nn
 
-import models.outputs.biaffine as scorer_module
+import steps.models.outputs.biaffine as scorer_module
 
 
 class ArcScorer(nn.Module):

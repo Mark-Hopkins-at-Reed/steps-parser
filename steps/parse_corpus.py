@@ -16,15 +16,44 @@ import io
 from pathlib import Path
 from collections import defaultdict
 
-from init_config import ConfigParser
-from data_handling.custom_conll_dataset import CustomCoNLLDataset
+from steps.init_config import ConfigParser
+from steps.data_handling.custom_conll_dataset import CustomCoNLLDataset
 
-from util.conll18_ud_eval import evaluate as evaluate_basic, load_conllu as load_conllu_basic
-from util.iwpt20_xud_eval import evaluate as evaluate_enhanced, load_conllu as load_conllu_enhanced
+from steps.util.conll18_ud_eval import evaluate as evaluate_basic, load_conllu as load_conllu_basic
+from steps.util.iwpt20_xud_eval import evaluate as evaluate_enhanced, load_conllu as load_conllu_enhanced
 
 BASIC_UD_EVAL_METRICS = ["Lemmas", "UPOS", "XPOS", "UFeats", "UAS", "LAS", "CLAS", "MLAS", "BLEX"]
 ENHANCED_UD_EVAL_METRICS = ["Lemmas", "UPOS", "XPOS", "UFeats", "EULAS", "ELAS"]
 DEFAULT_TREEBANK_TYPE = defaultdict(lambda: 0)
+
+
+class SingleSentenceParser:
+    def __init__(self,
+                 model_dir='/Users/markhopkins/Documents/projects/parsing/steps-parser/data/saved_models/basic_mbert',
+                 keep_columns=None):
+        args = argparse.Namespace(model_dir=model_dir)
+        config = ConfigParser.from_args(args,
+                                        modification=get_config_modification(args))
+        model = config.init_model()
+        trainer = config.init_trainer(model, None,
+                                      None)  # Inelegant, but need to do this because trainer handles checkpoint loading
+        self.parser = trainer.parser
+        self.annotation_layers = config["data_loaders"]["args"]["annotation_layers"]
+        if keep_columns is not None:
+            for col in keep_columns:
+                self.annotation_layers[col] = {"type": "TagSequence", "source_column": col}
+        self.keep_columns = keep_columns
+
+    def parse(self, raw_sent):
+        sentence = AnnotatedSentence.from_conll(raw_sent,
+                                                self.annotation_layers,
+                                                keep_traces=False)
+        parsed_sentence = parser.parse(sentence)
+        for col in self.keep_columns or []:  # Copy over columns to keep from input corpus
+            parsed_sentence.annotation_data[col] = sentence[col]
+        heads = parsed_sentence.annotation_data['heads'].data
+        labels = parsed_sentence.annotation_data['labels'].data
+        return heads, labels
 
 
 def parse_corpus(config, corpus_file, output, parser=None, keep_columns=None):

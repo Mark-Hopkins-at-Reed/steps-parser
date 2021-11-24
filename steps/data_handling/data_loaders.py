@@ -10,9 +10,9 @@ from torch.utils.data import DataLoader
 
 from math import inf
 
-from data_handling.custom_conll_dataset import CustomCoNLLDataset
-from data_handling.bucket_sampler import BucketBatchSampler
-from data_handling.annotated_sentence import AnnotatedSentence
+from steps.data_handling.custom_conll_dataset import CustomCoNLLDataset
+from steps.data_handling.bucket_sampler import BucketBatchSampler
+from steps.data_handling.annotated_sentence import AnnotatedSentence
 
 
 class StandardCONLLLoader(DataLoader):

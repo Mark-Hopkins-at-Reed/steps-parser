@@ -6,9 +6,9 @@
 #
 #  Author: Stefan Grünewald
 
-from models.post_processing.unfactorized_greedy import UnfactorizedGreedyPostProcessor
+from steps.models.post_processing.unfactorized_greedy import UnfactorizedGreedyPostProcessor
 
-from util.lexicalize import lexicalize
+from steps.util.lexicalize import lexicalize
 
 
 class UnfactorizedGreedyGraphPostProcessor(UnfactorizedGreedyPostProcessor):

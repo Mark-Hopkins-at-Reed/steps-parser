@@ -14,9 +14,22 @@ import stanza
 from io import StringIO
 from stanza.utils.conll import CoNLL
 
-from init_config import ConfigParser
-from parse_corpus import parse_corpus, get_config_modification, create_output, reset_file, run_evaluation
+from steps.init_config import ConfigParser
+from steps.parse_corpus import parse_corpus, get_config_modification, create_output, reset_file, run_evaluation
 
+
+def preprocess_raw_sent(sent, lang):
+    stanza_pipeline = stanza.Pipeline(lang=lang, processors='tokenize,mwt', use_gpu=False)
+    doc = stanza_pipeline(sent)
+    print(doc)
+    conll = CoNLL.convert_dict(doc.to_dict())
+    conll_stream = StringIO()
+    for sent in conll:
+        for token in sent:
+            print("\t".join(token), file=conll_stream)
+        print(file=conll_stream)
+    conll_stream.seek(0)
+    return conll_stream
 
 def preprocess_to_stream(corpus_filename, lang):
     """Pre-process (tokenize, segment) the specified raw text corpus using the Stanford's Stanza library.
@@ -64,6 +77,9 @@ if __name__ == '__main__':
     output_file = create_output(args.output_filename)
 
     parse_corpus(config, conll_stream, output_file)
+    print("ARGS")
+    print(args)
+    print(type(args))
 
     # Run evaluation
     if args.reference_corpus != "":

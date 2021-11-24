@@ -10,8 +10,8 @@ import torch
 
 from torch.nn.functional import softmax
 
-from data_handling.dependency_matrix import dependents
-from models.post_processing.unfactorized_greedy import UnfactorizedGreedyPostProcessor
+from steps.data_handling.dependency_matrix import dependents
+from steps.models.post_processing.unfactorized_greedy import UnfactorizedGreedyPostProcessor
 
 
 class UnfactorizedGreedyTreePostProcessor(UnfactorizedGreedyPostProcessor):

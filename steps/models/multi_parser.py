@@ -9,10 +9,10 @@
 import torch
 from torch import nn
 
-from data_handling.annotated_sentence import AnnotatedSentence
-from data_handling.dependency_matrix import DependencyMatrix
-from data_handling.tag_sequence import TagSequence
-from models.outputs import DependencyClassifier, SequenceTagger, ArcScorer
+from steps.data_handling.annotated_sentence import AnnotatedSentence
+from steps.data_handling.dependency_matrix import DependencyMatrix
+from steps.data_handling.tag_sequence import TagSequence
+from steps.models.outputs import DependencyClassifier, SequenceTagger, ArcScorer
 
 
 class MultiParser(nn.Module):

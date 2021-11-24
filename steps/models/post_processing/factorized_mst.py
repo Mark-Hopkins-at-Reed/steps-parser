@@ -8,8 +8,8 @@
 
 from torch.nn.functional import log_softmax
 
-from models.post_processing.post_processor import PostProcessor
-from util.chuliu_edmonds import chuliu_edmonds_one_root
+from steps.models.post_processing.post_processor import PostProcessor
+from steps.util.chuliu_edmonds import chuliu_edmonds_one_root
 
 
 class FactorizedMSTPostProcessor(PostProcessor):
