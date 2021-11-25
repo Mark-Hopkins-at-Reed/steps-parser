@@ -12,12 +12,16 @@ parsing.
 
 import argparse
 import io
+import stanza
+from stanza.utils.conll import CoNLL
+from io import StringIO
 
 from pathlib import Path
 from collections import defaultdict
 
 from steps.init_config import ConfigParser
 from steps.data_handling.custom_conll_dataset import CustomCoNLLDataset
+from steps.data_handling.annotated_sentence import AnnotatedSentence
 
 from steps.util.conll18_ud_eval import evaluate as evaluate_basic, load_conllu as load_conllu_basic
 from steps.util.iwpt20_xud_eval import evaluate as evaluate_enhanced, load_conllu as load_conllu_enhanced
@@ -26,10 +30,22 @@ BASIC_UD_EVAL_METRICS = ["Lemmas", "UPOS", "XPOS", "UFeats", "UAS", "LAS", "CLAS
 ENHANCED_UD_EVAL_METRICS = ["Lemmas", "UPOS", "XPOS", "UFeats", "EULAS", "ELAS"]
 DEFAULT_TREEBANK_TYPE = defaultdict(lambda: 0)
 
+def preprocess_raw_sent(sent, lang):
+    stanza_pipeline = stanza.Pipeline(lang=lang, processors='tokenize,mwt', use_gpu=False)
+    doc = stanza_pipeline(sent + "\n")
+    conll = CoNLL.convert_dict(doc.to_dict())
+    conll_stream = StringIO()
+    for sent in conll:
+        for token in sent:
+            print("\t".join(token), file=conll_stream)
+        print(file=conll_stream)
+    conll_stream.seek(0)
+    return conll_stream
+
 
 class SingleSentenceParser:
     def __init__(self,
-                 model_dir='/Users/markhopkins/Documents/projects/parsing/steps-parser/data/saved_models/basic_mbert',
+                 model_dir='/Users/markhopkins/Documents/projects/parsing/steps-parser/data/saved_models/1124_023345/',
                  keep_columns=None):
         args = argparse.Namespace(model_dir=model_dir)
         config = ConfigParser.from_args(args,
@@ -45,15 +61,19 @@ class SingleSentenceParser:
         self.keep_columns = keep_columns
 
     def parse(self, raw_sent):
-        sentence = AnnotatedSentence.from_conll(raw_sent,
-                                                self.annotation_layers,
-                                                keep_traces=False)
-        parsed_sentence = parser.parse(sentence)
+        sentences = preprocess_raw_sent(raw_sent, "en")
+        dataset = CustomCoNLLDataset.from_corpus_file(sentences, self.annotation_layers)
+        sent = dataset[0]
+        parsed_sentence = self.parser.parse(sent)
         for col in self.keep_columns or []:  # Copy over columns to keep from input corpus
             parsed_sentence.annotation_data[col] = sentence[col]
-        heads = parsed_sentence.annotation_data['heads'].data
+        orig_heads = parsed_sentence.annotation_data['heads'].data
+        heads = [int(x) for x in orig_heads]
         labels = parsed_sentence.annotation_data['labels'].data
-        return heads, labels
+        deps = [labels[heads[dep]][dep] for dep in range(len(heads))]
+        heads = [x - 1 for x in heads[1:]]
+        deps = deps[1:]
+        return sent.tokens[1:], heads, deps, deps
 
 
 def parse_corpus(config, corpus_file, output, parser=None, keep_columns=None):

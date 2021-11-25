@@ -12,8 +12,8 @@ import argparse
 
 from pathlib import Path
 
-from init_config import ConfigParser
-from parse_corpus import reset_file, parse_corpus, run_evaluation
+from steps.init_config import ConfigParser
+from steps.parse_corpus import reset_file, parse_corpus, run_evaluation
 
 
 def main(config, eval_mode="basic"):

@@ -20,8 +20,7 @@ from steps.parse_corpus import parse_corpus, get_config_modification, create_out
 
 def preprocess_raw_sent(sent, lang):
     stanza_pipeline = stanza.Pipeline(lang=lang, processors='tokenize,mwt', use_gpu=False)
-    doc = stanza_pipeline(sent)
-    print(doc)
+    doc = stanza_pipeline(sent + "\n")
     conll = CoNLL.convert_dict(doc.to_dict())
     conll_stream = StringIO()
     for sent in conll:
